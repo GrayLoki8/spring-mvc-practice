@@ -1,6 +1,5 @@
 package ua.grayloki8.spring.dao;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -35,12 +34,12 @@ public class PersonDAO {
     }
 
     public void save(Person person) {
-       jdbcTemplate.update("insert into Person(name,age,email) VALUES (?,?,?)",person.getName(),person.getAge(),person.getEmail());
+       jdbcTemplate.update("insert into Person(name,age,email,address) VALUES (?,?,?,?)",person.getName(),person.getAge(),person.getEmail(),person.getAddress());
     }
 
     public void update(int id, Person person) {
-        jdbcTemplate.update("UPDATE Person Set name=?, age=? ,email=? where id=?",
-                person.getName(),person.getAge(),person.getEmail(),id);
+        jdbcTemplate.update("UPDATE Person Set name=?, age=? ,email=?, address=? where id=?",
+                person.getName(),person.getAge(),person.getEmail(),person.getAddress(),id);
     }
 
     public void delete(int id) {
@@ -81,7 +80,7 @@ public class PersonDAO {
     private List<Person> create1000People() {
         List<Person> people=new ArrayList<>();
         for (int i = 0; i < 1000; i++) {
-            people.add(new Person(i,"name "+i,i,"test"+i+"@test.com"));
+            people.add(new Person(i,"name "+i,i,"test"+i+"@test.com", "address"));
         }
         return people;
     }
