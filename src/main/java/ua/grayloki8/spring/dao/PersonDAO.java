@@ -107,11 +107,5 @@ public class PersonDAO {
         }
         return people;
     }
-    @Transactional
-    public boolean same(Person person, int id) {
-        Session currentSession = sessionFactory.getCurrentSession();
-        Person personInDB = currentSession.get(Person.class, id);
-        return Objects.equals(personInDB.getEmail(), person.getEmail());
 
-    }
 }
