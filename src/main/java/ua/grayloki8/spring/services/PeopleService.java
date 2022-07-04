@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ua.grayloki8.spring.models.Person;
 import ua.grayloki8.spring.repositories.PeopleRepository;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -26,6 +27,7 @@ public class PeopleService {
     }
     @Transactional
     public void save(Person person){
+        person.setCreateAt(new Date());
         peopleRepository.save(person);
     }
     @Transactional
@@ -43,8 +45,6 @@ public class PeopleService {
         return Objects.equals(personInDB.getEmail(), person.getEmail());
 
     }
-    public void test(){
-        System.out.println("Testing here with debug. Inside Hibernate Transaction");
-    }
+
 
 }

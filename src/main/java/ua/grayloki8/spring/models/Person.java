@@ -1,7 +1,10 @@
 package ua.grayloki8.spring.models;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.*;
 import javax.validation.constraints.*;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -28,6 +31,13 @@ public class Person {
     @Pattern(regexp = "[A-Z]\\w+, [A-Z]\\w+, \\d{6}",message = "Your address should be in this format: Country, City, Postal Code 6 digit")
     @Column(name = "address")
     private String address;
+    @Column(name = "date_of_birth")
+    @Temporal(TemporalType.DATE)
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    private Date dateOFBirth;
+    @Column(name = "create_at")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date createAt;
     @OneToMany(mappedBy = "owner")
     private List<Item> items;
 
@@ -97,5 +107,21 @@ public class Person {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 '}';
+    }
+
+    public Date getDateOFBirth() {
+        return dateOFBirth;
+    }
+
+    public void setDateOFBirth(Date dateOFBirth) {
+        this.dateOFBirth = dateOFBirth;
+    }
+
+    public Date getCreateAt() {
+        return createAt;
+    }
+
+    public void setCreateAt(Date createAt) {
+        this.createAt = createAt;
     }
 }

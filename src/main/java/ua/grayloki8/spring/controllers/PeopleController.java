@@ -32,7 +32,6 @@ public class PeopleController {
         model.addAttribute("people",peopleService.findAll());
         itemService.findByItemName("Super item");
         itemService.findByOwner(peopleService.findAll().get(0));
-        peopleService.test();
         return "people/index";
     }
     @GetMapping("/{id}")
