@@ -43,4 +43,8 @@ public class PeopleService {
         return Objects.equals(personInDB.getEmail(), person.getEmail());
 
     }
+    public void test(){
+        System.out.println("Testing here with debug. Inside Hibernate Transaction");
+    }
+
 }

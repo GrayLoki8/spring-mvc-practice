@@ -2,6 +2,8 @@ package ua.grayloki8.spring.models;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
+import java.util.List;
+
 @Entity
 @Table(name = "person")
 public class Person {
@@ -26,6 +28,8 @@ public class Person {
     @Pattern(regexp = "[A-Z]\\w+, [A-Z]\\w+, \\d{6}",message = "Your address should be in this format: Country, City, Postal Code 6 digit")
     @Column(name = "address")
     private String address;
+    @OneToMany(mappedBy = "owner")
+    private List<Item> items;
 
     public Person(int id, String name, int age, String email, String address) {
         this.id = id;
@@ -33,6 +37,14 @@ public class Person {
         this.age = age;
         this.email = email;
         this.address = address;
+    }
+
+    public List<Item> getItems() {
+        return items;
+    }
+
+    public void setItems(List<Item> items) {
+        this.items = items;
     }
 
     public String getAddress() {

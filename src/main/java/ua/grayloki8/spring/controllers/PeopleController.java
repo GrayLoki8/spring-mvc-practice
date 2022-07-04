@@ -7,6 +7,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import ua.grayloki8.spring.models.Person;
+import ua.grayloki8.spring.services.ItemService;
 import ua.grayloki8.spring.services.PeopleService;
 import ua.grayloki8.spring.util.PersonValidator;
 
@@ -17,16 +18,21 @@ import javax.validation.Valid;
 public class PeopleController {
     private final PeopleService peopleService;
     private final PersonValidator personValidator;
+    private final ItemService itemService;
 
     @Autowired
-    public PeopleController(PeopleService peopleService, PersonValidator personValidator) {
+    public PeopleController(PeopleService peopleService, PersonValidator personValidator, ItemService itemService) {
         this.peopleService = peopleService;
         this.personValidator = personValidator;
+        this.itemService = itemService;
     }
 
     @GetMapping()
     public String index(Model model){
         model.addAttribute("people",peopleService.findAll());
+        itemService.findByItemName("Super item");
+        itemService.findByOwner(peopleService.findAll().get(0));
+        peopleService.test();
         return "people/index";
     }
     @GetMapping("/{id}")
