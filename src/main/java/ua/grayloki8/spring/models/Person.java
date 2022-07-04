@@ -26,6 +26,8 @@ public class Person {
     @Email(message = "Email should be valid")
     @Column(name = "email")
     private String email;
+    @Enumerated(EnumType.ORDINAL)
+    private Mood mood;
     //Страна, Город, Индекс (6 цифр)
 
     @Pattern(regexp = "[A-Z]\\w+, [A-Z]\\w+, \\d{6}",message = "Your address should be in this format: Country, City, Postal Code 6 digit")
@@ -55,6 +57,14 @@ public class Person {
 
     public void setItems(List<Item> items) {
         this.items = items;
+    }
+
+    public Mood getMood() {
+        return mood;
+    }
+
+    public void setMood(Mood mood) {
+        this.mood = mood;
     }
 
     public String getAddress() {

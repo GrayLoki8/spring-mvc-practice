@@ -4,6 +4,7 @@ import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ua.grayloki8.spring.models.Mood;
 import ua.grayloki8.spring.models.Person;
 import ua.grayloki8.spring.repositories.PeopleRepository;
 
@@ -27,6 +28,7 @@ public class PeopleService {
     }
     @Transactional
     public void save(Person person){
+        person.setMood(Mood.CALM);
         person.setCreateAt(new Date());
         peopleRepository.save(person);
     }
