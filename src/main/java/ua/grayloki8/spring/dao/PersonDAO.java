@@ -1,9 +1,13 @@
 package ua.grayloki8.spring.dao;
 
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import ua.grayloki8.spring.models.Person;
 
 import java.sql.*;
@@ -13,19 +17,23 @@ import java.util.Optional;
 
 @Component
 public class PersonDAO {
+    //Jdbc Template
     private final JdbcTemplate jdbcTemplate;
+    private final SessionFactory sessionFactory;
 
-    public PersonDAO(JdbcTemplate jdbcTemplate) {
+    public PersonDAO(JdbcTemplate jdbcTemplate, SessionFactory sessionFactory) {
         this.jdbcTemplate = jdbcTemplate;
+        this.sessionFactory = sessionFactory;
     }
-
+    @Transactional
     public List<Person> index(){
+        Session currentSession = sessionFactory.getCurrentSession();
+        List<Person> people = currentSession.createQuery("select p from Person p", Person.class).getResultList();
 
-        return jdbcTemplate.query("SELECT * from Person",new BeanPropertyRowMapper<>(Person.class));
+        return people;
     }
     public Person show(final int id){
-      return jdbcTemplate.query("SELECT * from Person where id=?",new Object[]{id},new BeanPropertyRowMapper<>(Person.class)).
-              stream().findAny().orElse(null);
+        return null;
     }
     public Optional<Person> show(String email){
         return jdbcTemplate.query("SELECT * from Person where email=?",new Object[]{email},
@@ -34,16 +42,12 @@ public class PersonDAO {
     }
 
     public void save(Person person) {
-       jdbcTemplate.update("insert into Person(name,age,email,address) VALUES (?,?,?,?)",person.getName(),person.getAge(),person.getEmail(),person.getAddress());
     }
 
     public void update(int id, Person person) {
-        jdbcTemplate.update("UPDATE Person Set name=?, age=? ,email=?, address=? where id=?",
-                person.getName(),person.getAge(),person.getEmail(),person.getAddress(),id);
     }
 
     public void delete(int id) {
-       jdbcTemplate.update("DELETE FROM Person where id=?",id);
     }
 
     public void testMultipleUpdate() {
