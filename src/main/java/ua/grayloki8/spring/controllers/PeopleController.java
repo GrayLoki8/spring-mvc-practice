@@ -64,11 +64,14 @@ public class PeopleController {
     public String update2(@ModelAttribute("person") @Valid Person person,
                          @PathVariable("id")int id,BindingResult bindingResult){
         System.out.println("post");
+        boolean same=personDAO.same(person,id);
+        System.out.println(same);
+        if (!same){
         personValidator.validate(person,bindingResult);
 
         if (bindingResult.hasErrors()){
             return "people/edit";
-        }
+        }}
         personDAO.update(id,person);
         return "redirect:/people";
     }

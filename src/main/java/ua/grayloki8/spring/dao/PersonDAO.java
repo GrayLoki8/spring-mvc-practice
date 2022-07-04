@@ -13,6 +13,7 @@ import ua.grayloki8.spring.models.Person;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Component
@@ -25,29 +26,47 @@ public class PersonDAO {
         this.jdbcTemplate = jdbcTemplate;
         this.sessionFactory = sessionFactory;
     }
-    @Transactional
+    @Transactional(readOnly = true)
     public List<Person> index(){
         Session currentSession = sessionFactory.getCurrentSession();
-        List<Person> people = currentSession.createQuery("select p from Person p", Person.class).getResultList();
+        return   currentSession.createQuery("select p from Person p", Person.class).getResultList();
 
-        return people;
+
     }
+    @Transactional(readOnly = true)
     public Person show(final int id){
-        return null;
+        Session currentSession = sessionFactory.getCurrentSession();
+        return currentSession.get(Person.class,id);
+
+
     }
     public Optional<Person> show(String email){
         return jdbcTemplate.query("SELECT * from Person where email=?",new Object[]{email},
                 new BeanPropertyRowMapper<>(Person.class)).stream().
                 findAny();
     }
-
+    @Transactional
     public void save(Person person) {
+        Session currentSession = sessionFactory.getCurrentSession();
+        currentSession.save(person);
     }
+
+    @Transactional
 
     public void update(int id, Person person) {
+        Session currentSession = sessionFactory.getCurrentSession();
+        Person personToBeUpdated = currentSession.get(Person.class, id);
+        personToBeUpdated.setName(person.getName());
+        personToBeUpdated.setAge(person.getAge());
+        personToBeUpdated.setAddress(person.getAddress());
+        if (!person.getEmail().equals(personToBeUpdated.getEmail())){
+        personToBeUpdated.setEmail(person.getEmail());}
     }
+    @Transactional
 
     public void delete(int id) {
+        Session currentSession = sessionFactory.getCurrentSession();
+        currentSession.delete(currentSession.get(Person.class,id));
     }
 
     public void testMultipleUpdate() {
@@ -87,5 +106,12 @@ public class PersonDAO {
             people.add(new Person(i,"name "+i,i,"test"+i+"@test.com", "address"));
         }
         return people;
+    }
+    @Transactional
+    public boolean same(Person person, int id) {
+        Session currentSession = sessionFactory.getCurrentSession();
+        Person personInDB = currentSession.get(Person.class, id);
+        return Objects.equals(personInDB.getEmail(), person.getEmail());
+
     }
 }
